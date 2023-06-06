@@ -56,4 +56,56 @@ pheatmap(sampleDistPoissonMatrix,
          clustering_distance_cols = sampleDistPoisson$dd,
          col = colors)
 dev.off()
+################################################################################
+library(factoextra)
+library(FactoMineR)
+
+# -- matrix of counts --
+load("matrix_salmon_tximport_20230519.RData")
+mat <- mat_gse$counts
+head(mat)
+
+res.pca <- PCA(mat, graph = FALSE)
+
+get_eig(res.pca)
+fviz_screeplot(res.pca)
+
+
+mat.pca <- prcomp(mat, scale. = TRUE)
+fviz_pca_biplot(mat.pca)
+
+
+data("decathlon2")
+decathlon2
+
+
+
+
+
+
+
+iris.pca <- prcomp(iris[,-5], scale. = TRUE)
+p2 <- fviz_pca_biplot(iris.pca, 
+                      # indivíduos
+                      geom.ind = "point",
+                      fill.ind = iris$Species, col.ind = "black",
+                      pointshape = 21, pointsize = 2,
+                      palette = "jco",
+                      addEllipses = TRUE,
+                      repel = TRUE,
+                      # variáveis
+                      alpha.var ="contrib", col.var = "contrib",
+                      gradient.cols = "RdYlBu",
+                      legend.title = list(fill = "Especies",
+                                          color = "Contribuição",
+                                          alpha = "Contribuição"))
+plot_grid(p1, p2, labels = c("p1", "p2"), rel_widths = c(0.4, 0.6))
+
+
+
+res.pca <- prcomp(data_pca, scale. = TRUE)
+
+
+
+
 pcaExplorer(dds)
