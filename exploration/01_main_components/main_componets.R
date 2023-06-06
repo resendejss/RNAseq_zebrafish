@@ -36,6 +36,7 @@ vsd <- vst(dds, blind = FALSE)
 sampleDists <- dist(t(assay(vsd)))
 sampleDistsMatrix <- as.matrix(sampleDists)
 colors <- colorRampPalette(rev(brewer.pal(11,"RdYlBu")))(255)
+
 pdf("sampleDistsMatrix_euclidean.pdf", height = 7, width = 7)
 pheatmap(sampleDistsMatrix,
          clustering_distance_rows = sampleDists,
@@ -48,8 +49,11 @@ sampleDistPoisson <- PoissonDistance(t(counts(dds)))
 sampleDistPoissonMatrix <- as.matrix(sampleDistPoisson$dd)
 rownames(sampleDistPoissonMatrix) <- colnames(counts(dds))
 colnames(sampleDistPoissonMatrix) <- colnames(counts(dds))
+
+pdf("sampleDistsMatrix_poisson.pdf", height = 7, width = 7)
 pheatmap(sampleDistPoissonMatrix,
          clustering_distance_rows = sampleDistPoisson$dd,
          clustering_distance_cols = sampleDistPoisson$dd,
          col = colors)
+dev.off()
 pcaExplorer(dds)
