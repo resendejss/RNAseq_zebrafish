@@ -54,3 +54,38 @@ res.padj05.lfc0 <- results(dds, contrast = c("Trat_01","AH","CT"), alpha = 0.05)
 summary(res.padj05.lfc0)
 
 write.csv(res.padj05.lfc0, file = "AHcut0_CTcut0_res05_sig_fc0.csv")
+################################################################################
+# plot
+library(ggplot2)
+library(ggrepel)
+
+data <- as.data.frame(res.padj05.lfc0)
+
+names.diff.up <- rownames(res.padj05.lfc0[res.padj05.lfc0$log2FoldChange > 1,])
+names.diff.down <- rownames(res.padj05.lfc0[res.padj05.lfc0$log2FoldChange < -1,])
+
+idx.up <- match(names.diff.up, rownames(data))
+idx.down <- match(names.diff.down, rownames(data))
+
+data$diffexpressed <- "NO"
+data$diffexpressed[idx.up] <- "UP"
+data$diffexpressed[idx.down] <- "DOWN"
+
+data$delabel <- NA
+data$delabel[data$diffexpressed!="NO"] <- rownames(
+  data[data$diffexpressed != "NO",])
+
+mycolors <- c("blue","red","gray")
+names(mycolors) <- c("DOWN","UP","NO")
+
+pdf("vulcanoplot_AHcut0_CTcut0_fc1.pdf", width = 8, height = 6)
+ggplot(data = data,
+       aes(x=log2FoldChange, y= -log10(padj), col=diffexpressed, label=delabel))+
+  geom_point()+
+  theme_minimal()+
+  geom_text_repel()+
+  #geom_vline(xintercept = c(-1,1), col="red")+
+  #geom_hline(yintercept = -log10(0.05), col="red")+
+  scale_color_manual(values = mycolors)+
+  xlim(-10,10)
+dev.off()
