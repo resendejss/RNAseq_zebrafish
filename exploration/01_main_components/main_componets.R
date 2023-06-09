@@ -23,6 +23,10 @@ load("matrix_salmon_tximport_20230519.RData")
 mat <- mat_gse$counts %>% round()
 head(mat)
 
+dds <- DESeqDataSetFromTximport(mat_gse,
+                                colData = colData,
+                                design = ~ Trat_01 + Trat_02 + Trat_03)
+
 # -- dds object --
 dds <- DESeqDataSetFromMatrix(countData = mat,
                               colData = colData,
@@ -37,7 +41,7 @@ sampleDists <- dist(t(assay(vsd)))
 sampleDistsMatrix <- as.matrix(sampleDists)
 colors <- colorRampPalette(rev(brewer.pal(11,"RdYlBu")))(255)
 
-pdf("sampleDistsMatrix_euclidean.pdf", height = 7, width = 7)
+pdf("sampleDistsMatrix_euclidean_all.pdf", height = 7, width = 7)
 pheatmap(sampleDistsMatrix,
          clustering_distance_rows = sampleDists,
          clustering_distance_cols = sampleDists,
@@ -50,7 +54,7 @@ sampleDistPoissonMatrix <- as.matrix(sampleDistPoisson$dd)
 rownames(sampleDistPoissonMatrix) <- colnames(counts(dds))
 colnames(sampleDistPoissonMatrix) <- colnames(counts(dds))
 
-pdf("sampleDistsMatrix_poisson.pdf", height = 7, width = 7)
+pdf("sampleDistsMatrix_poisson_all.pdf", height = 7, width = 7)
 pheatmap(sampleDistPoissonMatrix,
          clustering_distance_rows = sampleDistPoisson$dd,
          clustering_distance_cols = sampleDistPoisson$dd,
