@@ -28,9 +28,9 @@ dds <- DESeqDataSetFromTximport(mat_gse,
                                 design = ~ Trat_01 + Trat_02 + Trat_03)
 
 # -- dds object --
-dds <- DESeqDataSetFromMatrix(countData = mat,
-                              colData = colData,
-                              design = ~ Trat_01 + Trat_02 + Trat_03)
+#dds <- DESeqDataSetFromMatrix(countData = mat,
+#                              colData = colData,
+#                              design = ~ Trat_01 + Trat_02 + Trat_03)
 
 # -- vst normalization
 vsd <- vst(dds, blind = FALSE)
@@ -63,53 +63,71 @@ dev.off()
 ################################################################################
 library(factoextra)
 library(FactoMineR)
+library(readxl)
 
 # -- matrix of counts --
 load("matrix_salmon_tximport_20230519.RData")
+coldata <- read_xlsx("coldata.xlsx")
+
+coldata$Trat_01 <- as.factor(coldata$Trat_01)
+coldata$Trat_02 <- as.factor(coldata$Trat_02)
+coldata$Trat_03 <- as.factor(coldata$Trat_03)
+
 mat <- mat_gse$counts
 head(mat)
+mat.t <- t(mat)
 
-res.pca <- PCA(mat, graph = FALSE)
+res.pca <- PCA(mat.t, graph = FALSE)
 
-get_eig(res.pca)
-fviz_screeplot(res.pca)
+#fviz_eig(res.pca, addlabels=TRUE, ylim = c(0,50))
+
+all(rownames(mat.t)==coldata$names)
+
+pdf("pca_all_AHCT.pdf", width = 8, height = 6)
+fviz_pca_ind(res.pca,
+             label = "none",
+             addEllipses = TRUE,
+             habillage = coldata$Trat_01,
+             ellipse.type = "confidence",
+             ellipse.level=0.95,
+             repel = TRUE)
+dev.off()
+
+mat.AH <- mat[,1:16]
+mat.AH.t <- t(mat.AH)
+
+res.pca <- PCA(mat.AH.t, graph = FALSE)
+
+#fviz_eig(res.pca, addlabels=TRUE, ylim = c(0,50))
+
+coldata.AH <- coldata[1:16,]
+all(rownames(mat.AH.t)==coldata.AH$names)
+
+pdf("pca_AH_cutUncut.pdf", width = 8, height = 6)
+fviz_pca_ind(res.pca,
+             label = "none",
+             addEllipses = TRUE,
+             habillage = coldata.AH$Trat_03,
+             ellipse.type = "confidence",
+             ellipse.level=0.95,
+             repel = TRUE)
+)
+dev.off()
+
+pdf("pca_AH_05100.pdf", width = 8, height = 6)
+fviz_pca_ind(res.pca,
+             label = "none",
+             addEllipses = TRUE,
+             habillage = coldata.AH$Trat_03,
+             ellipse.type = "confidence",
+             ellipse.level=0.95,
+             repel = TRUE)
+)
+dev.off()
+
+################################################################################
 
 
-mat.pca <- prcomp(mat, scale. = TRUE)
-fviz_pca_biplot(mat.pca)
-
-
-data("decathlon2")
-decathlon2
-
-
-
-
-
-
-
-iris.pca <- prcomp(iris[,-5], scale. = TRUE)
-p2 <- fviz_pca_biplot(iris.pca, 
-                      # indivíduos
-                      geom.ind = "point",
-                      fill.ind = iris$Species, col.ind = "black",
-                      pointshape = 21, pointsize = 2,
-                      palette = "jco",
-                      addEllipses = TRUE,
-                      repel = TRUE,
-                      # variáveis
-                      alpha.var ="contrib", col.var = "contrib",
-                      gradient.cols = "RdYlBu",
-                      legend.title = list(fill = "Especies",
-                                          color = "Contribuição",
-                                          alpha = "Contribuição"))
-plot_grid(p1, p2, labels = c("p1", "p2"), rel_widths = c(0.4, 0.6))
-
-
-
-res.pca <- prcomp(data_pca, scale. = TRUE)
-
-
-
+plot(res.pca,choix="ind",habillage=2)
 
 pcaExplorer(dds)
