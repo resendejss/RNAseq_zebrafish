@@ -61,6 +61,9 @@ pheatmap(sampleDistPoissonMatrix,
          col = colors)
 dev.off()
 ################################################################################
+pcaExplorer(dds)
+
+################################################################################
 library(factoextra)
 library(FactoMineR)
 library(readxl)
@@ -88,11 +91,14 @@ fviz_pca_ind(res.pca,
              label = "none",
              addEllipses = TRUE,
              habillage = coldata$Trat_01,
-             ellipse.type = "confidence",
+             #col.ind = coldata$Trat_01,
+             #col.ind.sup = coldata$Trat_02,
+             #ellipse.type = "confidence",
              ellipse.level=0.95,
              repel = TRUE)
 dev.off()
 
+# AH
 mat.AH <- mat[,1:16]
 mat.AH.t <- t(mat.AH)
 
@@ -108,10 +114,9 @@ fviz_pca_ind(res.pca,
              label = "none",
              addEllipses = TRUE,
              habillage = coldata.AH$Trat_03,
-             ellipse.type = "confidence",
+             #ellipse.type = "confidence",
              ellipse.level=0.95,
              repel = TRUE)
-)
 dev.off()
 
 pdf("pca_AH_05100.pdf", width = 8, height = 6)
@@ -119,15 +124,41 @@ fviz_pca_ind(res.pca,
              label = "none",
              addEllipses = TRUE,
              habillage = coldata.AH$Trat_03,
+             #ellipse.type = "confidence",
+             ellipse.level=0.95,
+             repel = TRUE)
+dev.off()
+
+# CT
+mat.CT <- mat[,17:32]
+mat.CT.t <- t(mat.CT)
+
+res.pca <- PCA(mat.CT.t, graph = FALSE)
+
+#fviz_eig(res.pca, addlabels=TRUE, ylim = c(0,50))
+
+coldata.CT <- coldata[17:32,]
+all(rownames(mat.CT.t)==coldata.CT$names)
+
+pdf("pca_CT_cutUncut.pdf", width = 8, height = 6)
+fviz_pca_ind(res.pca,
+             label = "none",
+             addEllipses = TRUE,
+             habillage = coldata.CT$Trat_02,
              ellipse.type = "confidence",
              ellipse.level=0.95,
              repel = TRUE)
-)
 dev.off()
 
+pdf("pca_CT_05100.pdf", width = 8, height = 6)
+fviz_pca_ind(res.pca,
+             label = "none",
+             addEllipses = TRUE,
+             habillage = coldata.CT$Trat_03,
+             ellipse.type = "confidence",
+             ellipse.level=0.95,
+             repel = TRUE)
+dev.off()
 ################################################################################
 
 
-plot(res.pca,choix="ind",habillage=2)
-
-pcaExplorer(dds)
