@@ -1,11 +1,11 @@
 library(clusterProfiler)
 library(org.Dr.eg.db)
 
-data.genes <- read.csv("../differential_expression/AHcut0_CTcut0_res05_sig_fc0.csv")
+data.genes <- read.csv("../differential_expression/AHuncut0_CTuncut0_res05_sig_fc0.csv")
 
-gene.ahctcut <- data.genes$X
+gene.ahctuncut <- data.genes$X
 
-ggo <- groupGO(gene     = gene.ahctcut,
+ggo <- groupGO(gene     = gene.ahctuncut,
                OrgDb    = org.Dr.eg.db,
                keyType = "ENSEMBL",
                ont      = "CC",
@@ -13,7 +13,7 @@ ggo <- groupGO(gene     = gene.ahctcut,
                readable = TRUE)
 head(ggo)
 
-entrez_genes <- mapIds(org.Dr.eg.db, gene.ahctcut, 'ENTREZID', 'ENSEMBL')
+entrez_genes <- mapIds(org.Dr.eg.db, gene.ahctuncut, 'ENTREZID', 'ENSEMBL')
 
 ego <- enrichGO(gene         = entrez_genes,
                 OrgDb         = org.Dr.eg.db,
