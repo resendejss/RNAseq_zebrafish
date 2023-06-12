@@ -24,26 +24,26 @@ head(rownames(data.prot.cod))
 idx <- match(rownames(data.prot.cod), rownames(mat_gse$counts))
 idx <- idx[!is.na(idx)]
 
-mat.gse.ahctCut0 <- mat_gse
+mat.gse.ctCutUncut0 <- mat_gse
 
-colnames(mat.gse.ahctCut0$counts)
+colnames(mat.gse.ctCutUncut0$counts)
 
-mat.gse.ahctCut0$abundance <- mat.gse.ahctCut0$abundance[idx,c(1:4,17:20)]
-mat.gse.ahctCut0$counts <- mat.gse.ahctCut0$counts[idx,c(1:4,17:20)]
-mat.gse.ahctCut0$length <- mat.gse.ahctCut0$length[idx,c(1:4,17:20)]
+mat.gse.ctCutUncut0$abundance <- mat.gse.ctCutUncut0$abundance[idx,c(17:20,29:32)]
+mat.gse.ctCutUncut0$counts <- mat.gse.ctCutUncut0$counts[idx,c(17:20,29:32)]
+mat.gse.ctCutUncut0$length <- mat.gse.ctCutUncut0$length[idx,c(17:20,29:32)]
 
-coldata.ahct <- coldata[c(1:4,17:20),1:2]
+coldata.cutUncut <- coldata[c(17:20,29:32),c(1,3)]
 
-ddsTxi <- DESeqDataSetFromTximport(mat.gse.ahctCut0,
-                                   colData = coldata.ahct,
-                                   design = ~ Trat_01)
+ddsTxi <- DESeqDataSetFromTximport(mat.gse.ctCutUncut0,
+                                   colData = coldata.cutUncut,
+                                   design = ~ Trat_02)
 
 # pre-filtration
 keep <- rowSums(counts(ddsTxi)) >= 10
 dds <- ddsTxi[keep,]
 
 # setting the reference
-dds$Trat_01 <- relevel(ddsTxi$Trat_01, ref = "AH")
+dds$Trat_02 <- relevel(ddsTxi$Trat_01, ref = "AH")
 
 # differential expression
 dds <- DESeq(dds)
@@ -53,7 +53,7 @@ res.padj05.lfc0 <- results(dds, contrast = c("Trat_01","AH","CT"), alpha = 0.05)
 #summary(res)
 summary(res.padj05.lfc0)
 
-write.csv(res.padj05.lfc0, file = "AHcut0_CTcut0_res05_sig_fc0.csv")
+write.csv(res.padj05.lfc0, file = "AHuncut0_CTuncut0_res05_sig_fc0.csv")
 ################################################################################
 # plot
 library(ggplot2)
@@ -61,8 +61,13 @@ library(ggrepel)
 
 data <- as.data.frame(res.padj05.lfc0)
 
-names.diff.up <- rownames(res.padj05.lfc0[res.padj05.lfc0$log2FoldChange > 1,])
-names.diff.down <- rownames(res.padj05.lfc0[res.padj05.lfc0$log2FoldChange < -1,])
+data2 <- data[data$padj < 0.05,]
+data2 <- data2[!is.na(data2$padj),]
+
+data2 <- data2[data2$log2FoldChange > 1 | data2$log2FoldChange < -1,]
+
+names.diff.up <- rownames(data2[data2$log2FoldChange > 1,])
+names.diff.down <- rownames(data2[data2$log2FoldChange < -1,])
 
 idx.up <- match(names.diff.up, rownames(data))
 idx.down <- match(names.diff.down, rownames(data))
@@ -75,13 +80,13 @@ data$delabel <- NA
 data$delabel[data$diffexpressed!="NO"] <- rownames(
   data[data$diffexpressed != "NO",])
 
-mycolors <- c("blue","red","gray")
+mycolors <- c("#00AFBB","#bb0c00","grey")
 names(mycolors) <- c("DOWN","UP","NO")
 
-pdf("vulcanoplot_AHcut0_CTcut0_fc1.pdf", width = 8, height = 6)
+pdf("vulcanoplot_AHuncut0_CTuncut0_fc1.pdf", width = 8, height = 6)
 ggplot(data = data,
        aes(x=log2FoldChange, y= -log10(padj), col=diffexpressed, label=delabel))+
-  geom_point()+
+  geom_point(size=0.5)+
   theme_minimal()+
   geom_text_repel()+
   #geom_vline(xintercept = c(-1,1), col="red")+
