@@ -1,5 +1,5 @@
 ################################################################################
-# Name: 02_AHuncut0_CTuncut0_allSamples                                            #
+# Name: 02_AHuncut0_CTuncut0_allSamples                                        # 
 # Author: Jean Resende (jean.s.s.resende@gmail.com)                            #
 # Project: RNAseq_zebrafish                                                    #
 #                                                                              #
