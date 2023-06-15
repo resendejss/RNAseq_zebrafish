@@ -1,7 +1,11 @@
 ################################################################################
-## differential expression
-## jean resende
-## RNAseq_zebrafish
+# Name: 02_AHuncut0_CTuncut0_allSamples                                            #
+# Author: Jean Resende (jean.s.s.resende@gmail.com)                            #
+# Project: RNAseq_zebrafish                                                    #
+#                                                                              #
+# Creation date: 2023/06/15                                                    #
+# Last update date: 2023/06/15                                                 #
+# Description: Differential expression                                         #
 ################################################################################
 library(DESeq2)
 library(readxl)
@@ -53,7 +57,7 @@ res.padj05.lfc0 <- results(dds, contrast = c("Trat_01","AH","CT"), alpha = 0.05)
 #summary(res)
 summary(res.padj05.lfc0)
 
-write.csv(res.padj05.lfc0, file = "AHuncut0_CTuncut0_res05_sig_fc0.csv")
+write.csv(res.padj05.lfc0, file = "allSamples/AHuncut0_CTuncut0_res05_sig_fc0.csv")
 ################################################################################
 # plot
 library(ggplot2)
@@ -83,7 +87,7 @@ data$delabel[data$diffexpressed!="NO"] <- rownames(
 mycolors <- c("#00AFBB","#bb0c00","grey")
 names(mycolors) <- c("DOWN","UP","NO")
 
-pdf("vulcanoplot_AHuncut0_CTuncut0_fc1.pdf", width = 8, height = 6)
+pdf("allSamples/vulcanoplot_AHuncut0_CTuncut0_fc1.pdf", width = 8, height = 6)
 ggplot(data = data,
        aes(x=log2FoldChange, y= -log10(padj), col=diffexpressed, label=delabel))+
   geom_point(size=0.5)+
