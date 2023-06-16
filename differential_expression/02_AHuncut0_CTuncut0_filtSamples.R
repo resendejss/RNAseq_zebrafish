@@ -11,7 +11,7 @@ library(DESeq2)
 library(readxl)
 
 # building object
-load("matrix_salmon_tximport_20230519.RData")
+load("mat_gse_filt_20230519.RData")
 load("EnsDbAnnotation_20230519_atual.RData")
 coldata <- read_xlsx("coldata.xlsx")
 
@@ -22,21 +22,21 @@ coldata$Trat_03 <- as.factor(coldata$Trat_03)
 data.prot.cod <- EnsDbAnnotation[
   EnsDbAnnotation$gene_biotype == "protein_coding",]
 
-head(rownames(mat_gse$counts))
+head(rownames(mat_gse_filt$counts))
 head(rownames(data.prot.cod))
 
-idx <- match(rownames(data.prot.cod), rownames(mat_gse$counts))
+idx <- match(rownames(data.prot.cod), rownames(mat_gse_filt$counts))
 idx <- idx[!is.na(idx)]
 
-mat.gse.ahctUncut0 <- mat_gse
+mat.gse.ahctUncut0 <- mat_gse_filt
 
 colnames(mat.gse.ahctUncut0$counts)
 
-mat.gse.ahctUncut0$abundance <- mat.gse.ahctUncut0$abundance[idx,c(13:16,29:32)]
-mat.gse.ahctUncut0$counts <- mat.gse.ahctUncut0$counts[idx,c(13:16,29:32)]
-mat.gse.ahctUncut0$length <- mat.gse.ahctUncut0$length[idx,c(13:16,29:32)]
+mat.gse.ahctUncut0$abundance <- mat.gse.ahctUncut0$abundance[idx,c(12:15,26:29)]
+mat.gse.ahctUncut0$counts <- mat.gse.ahctUncut0$counts[idx,c(12:15,26:29)]
+mat.gse.ahctUncut0$length <- mat.gse.ahctUncut0$length[idx,c(12:15,26:29)]
 
-coldata.ahct <- coldata[c(13:16,29:32),1:2]
+coldata.ahct <- coldata[coldata$names%in%colnames(mat.gse.ahctUncut0$counts),1:2]
 
 ddsTxi <- DESeqDataSetFromTximport(mat.gse.ahctUncut0,
                                    colData = coldata.ahct,
@@ -57,7 +57,7 @@ res.padj05.lfc0 <- results(dds, contrast = c("Trat_01","AH","CT"), alpha = 0.05)
 #summary(res)
 summary(res.padj05.lfc0)
 
-write.csv(res.padj05.lfc0, file = "allSamples/AHuncut0_CTuncut0_res05_sig_fc0.csv")
+write.csv(res.padj05.lfc0, file = "filtSamples/AHuncut0_CTuncut0_res05_sig_fc0.csv")
 ################################################################################
 # plot
 library(ggplot2)
@@ -87,7 +87,7 @@ data$delabel[data$diffexpressed!="NO"] <- rownames(
 mycolors <- c("#00AFBB","#bb0c00","grey")
 names(mycolors) <- c("DOWN","UP","NO")
 
-pdf("allSamples/vulcanoplot_AHuncut0_CTuncut0_fc1.pdf", width = 8, height = 6)
+pdf("filtSamples/vulcanoplot_AHuncut0_CTuncut0_fc1.pdf", width = 8, height = 6)
 ggplot(data = data,
        aes(x=log2FoldChange, y= -log10(padj), col=diffexpressed, label=delabel))+
   geom_point(size=0.5)+
