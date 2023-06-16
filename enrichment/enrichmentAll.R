@@ -2,7 +2,7 @@
 ## RNA-Seq - zebrafish
 ## GO enrichment
 ## date of creation: 2023/06/12
-## date of last update: 2023/06/14
+## date of last update: 2023/06/16
 ## jean resende
 ################################################################################
 library(clusterProfiler)
@@ -16,8 +16,7 @@ data <- data[!is.na(data$padj),]
 
 data <- data[data$padj < 0.05,]
 
-nrow(data.genes[data.genes$log2FoldChange < 1,])
-
+nrow(data)
 
 gene <- data$X
 
@@ -26,7 +25,7 @@ entrez_genes <- entrez_genes[!is.na(entrez_genes)]
 
 ego <- enrichGO(gene         = entrez_genes,
                 OrgDb         = org.Dr.eg.db,
-                ont           = "CC",
+                ont           = "BP",
                 pAdjustMethod = "BH"
                 )
 goplot(ego)
