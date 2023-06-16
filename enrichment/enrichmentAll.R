@@ -14,6 +14,8 @@ data.genes <- read.csv("../differential_expression/allSamples/AHcut0_CTcut0_res0
 data <- data.genes[data.genes$lfcSE > 1 | data.genes$log2FoldChange < -1,]
 data <- data[!is.na(data$padj),]
 
+data <- data[data$padj < 0.05,]
+
 nrow(data.genes[data.genes$log2FoldChange < 1,])
 
 
