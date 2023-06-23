@@ -49,6 +49,13 @@ head(kk)
 barplot(kk)
 goplot(kk)
 
+# -- KEEG
+kk <- enrichKEGG(gene = entrez,
+                 organism = "dre",
+                 pvalueCutoff = 0.05)
+
+head(kk)
+
 # -- AHcut0_CTcut0 filt samples-- ##############################################
 
 data.genes <- read.csv("../differential_expression/filtSamples/AHcut0_CTcut0_res05_sig_fc0.csv")
@@ -90,6 +97,13 @@ head(kk)
 barplot(kk)
 goplot(kk)
 
+# -- KEEG
+kk <- enrichKEGG(gene = entrez,
+                 organism = "dre",
+                 pvalueCutoff = 0.05)
+
+head(kk)
+
 # -- AHuncut0_CTuncut0 all samples-- ###########################################
 data.genes <- read.csv("../differential_expression/allSamples/AHuncut0_CTuncut0_res05_sig_fc0.csv")
 
@@ -130,6 +144,15 @@ head(kk)
 barplot(kk)
 goplot(kk)
 
+# -- KEEG
+kk <- enrichKEGG(gene = entrez,
+                 organism = "dre",
+                 pvalueCutoff = 0.05)
+
+head(kk)
+
+browseKEGG(kk, 'dre00190')
+
 # -- AHuncut0_CTuncut0 filt samples-- ##########################################
 data.genes <- read.csv("../differential_expression/filtSamples/AHuncut0_CTuncut0_res05_sig_fc0.csv")
 
@@ -169,3 +192,16 @@ kk <- enrichGO(gene = entrez,
 head(kk)
 barplot(kk)
 goplot(kk)
+
+# -- KEEG
+kk <- enrichKEGG(gene = entrez,
+                 organism = "dre",
+                 pvalueCutoff = 0.05)
+
+head(kk)
+
+browseKEGG(kk, 'dre00190')
+
+
+
+
