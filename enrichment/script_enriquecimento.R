@@ -152,6 +152,20 @@ kk <- enrichKEGG(gene = entrez,
 head(kk)
 
 browseKEGG(kk, 'dre00190')
+browseKEGG(kk, 'dre04260')
+browseKEGG(kk, 'dre00983')
+browseKEGG(kk, 'dre00140')
+browseKEGG(kk, 'dre00120')
+browseKEGG(kk, 'dre03320')
+browseKEGG(kk, 'dre00980')
+browseKEGG(kk, 'dre00830')
+browseKEGG(kk, 'dre00982')
+browseKEGG(kk, 'dre00040')
+browseKEGG(kk, 'dre00591')
+browseKEGG(kk, 'dre00100')
+browseKEGG(kk, 'dre04744')
+browseKEGG(kk, 'dre00590')
+browseKEGG(kk, 'dre03010')
 
 # -- AHuncut0_CTuncut0 filt samples-- ##########################################
 data.genes <- read.csv("../differential_expression/filtSamples/AHuncut0_CTuncut0_res05_sig_fc0.csv")
