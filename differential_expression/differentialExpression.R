@@ -54,7 +54,7 @@ ahctCut0_allSamples <- grep(".._Cut_0_.", colnames(data_allSamples$counts)) # ah
 ahctCut0_filtSamples <- grep(".._Cut_0_.", colnames(data_filtSamples$counts)) # ahctCut0_filtSamples
 
 ahctUncut0_allSamples <- grep(".._Uncut_0_.", colnames(data_allSamples$counts)) # ahctUncut0_allSamples
-ahcUncut0_filtSamples <- grep(".._Uncut_0_.", colnames(data_allSamples$counts)) # ahcUncut0_filtSamples
+ahcUncut0_filtSamples <- grep(".._Uncut_0_.", colnames(data_filtSamples$counts)) # ahcUncut0_filtSamples
 
 ctCutUncut0_allSamples <- grep("^CT.*_0_.", colnames(data_allSamples$counts)) # ctCutUncut0_allSamples
 ctCutUncut0_filtSamples <- grep("^CT.*_0_.", colnames(data_filtSamples$counts)) # ctCutUncut0_filtSamples
@@ -68,34 +68,37 @@ ahctCut100_filtSamples <- grep(".._Cut_100_.", colnames(data_filtSamples$counts)
 ctCut0100_allSamples <- grep("CT_Cut_.*0_.", colnames(data_allSamples$counts)) # ctCut0100_allSamples
 ctCut0100_filtSamples <- grep("CT_Cut_.*0_.", colnames(data_filtSamples$counts)) # ctCut0100_filtSamples
 
-################################################################################
-data <- data_allSamples
-data$abundance <- data$abundance[idx,ahctCut0_allSamples]
-data$counts <- data$counts[idx,ahctCut0_allSamples]
-data$length <- data$length[idx,ahctCut0_allSamples]
+ctCut05_allSamples <- grep("CT_Cut_._.", colnames(data_allSamples$counts)) # ctCut05_allSamples
+ctCut05_filtSamples <- grep("CT_Cut_._.", colnames(data_filtSamples$counts)) # ctCut05_filtSamples
 
-coldata_samples <- coldata[ahctCut0_allSamples, c("names","Trat_01")]
 ################################################################################
+data <- data_filtSamples
+data$abundance <- data$abundance[idx,ctCut05_filtSamples]
+data$counts <- data$counts[idx,ctCut05_filtSamples]
+data$length <- data$length[idx,ctCut05_filtSamples]
 
+coldata_samples <- coldata[coldata$names %in% colnames(data$counts), c("names","Trat_03")]
+################################################################################
 ddsTxi <- DESeqDataSetFromTximport(txi = data,
                                    colData = coldata_samples,
-                                   design = ~ Trat_01)
+                                   design = ~ Trat_03)
 
 # -- pre-filtragem
 keep <- rowSums(counts(ddsTxi)) >= 10
 dds <- ddsTxi[keep,]
 
 # -- setting the reference
-dds$Trat_01 < relevel(dds$Trat_01, ref = "AH")
+dds$Trat_03 <- relevel(dds$Trat_03, ref = "5")
 
 # -- differential expression
 dds <- DESeq(dds)
-res <- results(dds, contrast = c("Trat_01","AH","CT"))
-res_padj05_lfc0 <- results(dds, contrast = c("Trat_01","AH","CT"), alpha = 0.05)
+res <- results(dds, contrast = c("Trat_03","5","0"))
+res_padj05_lfc0 <- results(dds, contrast = c("Trat_03","5","0"), alpha = 0.05)
 
 summary(res)
 summary(res_padj05_lfc0)
 
 ################################################################################
-write.csv(res_padj05_lfc0, file = "allSamples/AHcut0_CTcut0_res05_sig_fc0.csv")
+write.csv(res_padj05_lfc0, file = "filtSamples/CTcut5_CTcut0_res05_sig_fc0.csv")
 ################################################################################
+
