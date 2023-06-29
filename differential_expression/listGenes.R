@@ -40,3 +40,4 @@ idx <- match(rownames(data), EnsDbAnnotation$ensemblid)
 table(is.na(idx))
 
 data$symbol <- EnsDbAnnotation$symbol[idx]
+data <- data[,c(1,30,2:29)]
