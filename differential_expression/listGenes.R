@@ -41,3 +41,8 @@ table(is.na(idx))
 
 data$symbol <- EnsDbAnnotation$symbol[idx]
 data <- data[,c(1,30,2:29)]
+
+data <- data[,-c(6,10,14,18,22,26,30)]
+colnames(data)[1] <- "ensemblid"
+
+write.csv(data, file="differentialExpression.csv")
