@@ -46,3 +46,45 @@ data <- data[,-c(6,10,14,18,22,26,30)]
 colnames(data)[1] <- "ensemblid"
 
 write.csv(data, file="differentialExpression.csv")
+
+
+# -- filt samples
+ahctCut0_filtSamples <- read.csv("filtSamples/AHcut0_CTcut0_res05_sig_fc0.csv")
+ahctUncut0_filtSamples <- read.csv("filtSamples/AHuncut0_CTuncut0_res05_sig_fc0.csv")
+ctCutUncut0_filtSamples <- read.csv("filtSamples/CTuncut0_CTcut0_res05_sig_fc0.csv")
+ahctCut5_filtSamples <- read.csv("filtSamples/AHcut5_CTcut5_res05_sig_fc0.csv")
+ahctCut100_filtSamples <- read.csv("filtSamples/AHcut100_CTcut100_res05_sig_fc0.csv")
+ctCut0100_filtSamples <- read.csv("filtSamples/CTcut100_CTcut0_res05_sig_fc0.csv")
+ctCut05_filtSamples <- read.csv("filtSamples/CTcut5_CTcut0_res05_sig_fc0.csv")
+
+colnames(ahctCut0_filtSamples)
+rownames(ahctCut0_filtSamples)
+
+lista <- mget(ls())
+
+for (i in 1:length(lista)) {
+  #rownames(lista[[i]]) <- lista[[i]][["X"]]
+  lista[[i]]$expDiff <- rep(names(lista[i]), nrow(lista[[i]]))
+  lista[[i]] <- lista[[i]][c(1,3,6:8)]
+  colnames(lista[[i]]) <- paste(colnames(lista[[i]]),
+                                lista[[i]]$expDiff[1],
+                                sep = "_")
+  colnames(lista[[i]])[1] <- "ensemblid"
+}
+
+
+data <- Reduce(function(x,y) merge(x,y,by="ensemblid",all=TRUE),lista)
+rownames(data) <- data$ensemblid
+
+load("EnsDbAnnotation_20230519_atual.RData")
+idx <- match(rownames(data), EnsDbAnnotation$ensemblid) 
+table(is.na(idx))
+
+data$symbol <- EnsDbAnnotation$symbol[idx]
+data <- data[,c(1,30,2:29)]
+
+data <- data[,-c(6,10,14,18,22,26,30)]
+#colnames(data)[1] <- "ensemblid"
+
+write.csv(data, file="differentialExpression_filtSamples.csv")
+################################################################################
