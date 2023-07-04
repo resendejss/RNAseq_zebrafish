@@ -218,4 +218,62 @@ browseKEGG(kk, 'dre00190')
 
 
 
+# -- CTuncut0_CTcut0 all samples-- ###########################################
+data.genes <- read.csv("../differential_expression/allSamples/CTuncut0_CTcut0_res05_sig_fc0.csv")
+
+genes <- data.genes[data.genes$log2FoldChange > 0.5 | data.genes$log2FoldChange < -0.5,]
+genes <- genes[!is.na(genes$padj),]
+genes <- genes[genes$padj < 0.05,]
+genes <- genes$X
+idx <- match(genes,gene_id$ensembl_gene_id)
+entrez <- gene_id$entrezgene_id[idx]
+entrez <- entrez[!is.na(entrez)]
+entrez <- as.character(entrez)
+
+ggo <- groupGO(gene = entrez,
+               OrgDb = org.Dr.eg.db,
+               ont = "CC",
+               #level = 3,
+               readable = T)
+
+kk <- enrichGO(gene = entrez,
+               OrgDb = org.Dr.eg.db,
+               pAdjustMethod = "BH",
+               ont="BP",
+               readable = T)
+
+kk <- enrichGO(gene = entrez,
+               OrgDb = org.Dr.eg.db,
+               pAdjustMethod = "BH",
+               ont="MF",
+               readable = T)
+
+kk <- enrichGO(gene = entrez,
+               OrgDb = org.Dr.eg.db,
+               pAdjustMethod = "BH",
+               ont="CC",
+               readable = T)
+
+head(kk)
+barplot(kk)
+goplot(kk)
+
+# -- KEEG
+kk <- enrichKEGG(gene = entrez,
+                 organism = "dre",
+                 pvalueCutoff = 0.05)
+
+head(kk)
+kk$ID
+
+browseKEGG(kk, 'dre04920')
+browseKEGG(kk, 'dre04060')
+browseKEGG(kk, 'dre04217')
+browseKEGG(kk, 'dre04625')
+browseKEGG(kk, 'dre04216')
+browseKEGG(kk, 'dre05168')
+browseKEGG(kk, 'dre04621')
+
+
+
 
