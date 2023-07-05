@@ -167,6 +167,70 @@ browseKEGG(kk, 'dre04744')
 browseKEGG(kk, 'dre00590')
 browseKEGG(kk, 'dre03010')
 
+# -- AHuncut0_CTuncut0 filt samples-- ###########################################
+data.genes <- read.csv("../differential_expression/filtSamples/AHuncut0_CTuncut0_res05_sig_fc0.csv")
+
+genes <- data.genes[data.genes$log2FoldChange > 0.5 | data.genes$log2FoldChange < -0.5,]
+genes <- genes[!is.na(genes$padj),]
+genes <- genes[genes$padj < 0.05,]
+genes <- genes$X
+idx <- match(genes,gene_id$ensembl_gene_id)
+entrez <- gene_id$entrezgene_id[idx]
+entrez <- entrez[!is.na(entrez)]
+entrez <- as.character(entrez)
+
+ggo <- groupGO(gene = entrez,
+               OrgDb = org.Dr.eg.db,
+               ont = "CC",
+               #level = 3,
+               readable = T)
+
+kk <- enrichGO(gene = entrez,
+               OrgDb = org.Dr.eg.db,
+               pAdjustMethod = "BH",
+               ont="BP",
+               readable = T)
+
+kk <- enrichGO(gene = entrez,
+               OrgDb = org.Dr.eg.db,
+               pAdjustMethod = "BH",
+               ont="MF",
+               readable = T)
+
+kk <- enrichGO(gene = entrez,
+               OrgDb = org.Dr.eg.db,
+               pAdjustMethod = "BH",
+               ont="CC",
+               readable = T)
+
+head(kk)
+barplot(kk)
+goplot(kk)
+
+# -- KEEG
+kk <- enrichKEGG(gene = entrez,
+                 organism = "dre",
+                 pvalueCutoff = 0.05)
+
+head(kk)
+
+browseKEGG(kk, 'dre00190')
+browseKEGG(kk, 'dre04260')
+browseKEGG(kk, 'dre00983')
+browseKEGG(kk, 'dre00140')
+browseKEGG(kk, 'dre00120')
+browseKEGG(kk, 'dre03320')
+browseKEGG(kk, 'dre00980')
+browseKEGG(kk, 'dre00830')
+browseKEGG(kk, 'dre00982')
+browseKEGG(kk, 'dre00040')
+browseKEGG(kk, 'dre00591')
+browseKEGG(kk, 'dre00100')
+browseKEGG(kk, 'dre04744')
+browseKEGG(kk, 'dre00590')
+browseKEGG(kk, 'dre03010')
+
+
 # -- AHuncut0_CTuncut0 filt samples-- ##########################################
 data.genes <- read.csv("../differential_expression/filtSamples/AHuncut0_CTuncut0_res05_sig_fc0.csv")
 
