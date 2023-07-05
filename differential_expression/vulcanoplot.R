@@ -10,7 +10,7 @@
 library(ggplot2)
 library(ggrepel)
 
-data <- read.csv("filtSamples/CTuncut0_CTcut0_res05_sig_fc0.csv")
+data <- read.csv("filtSamples/CTcut5_CTcut0_res05_sig_fc0.csv")
 is.data.frame(data)
 rownames(data) <- data$X
 
