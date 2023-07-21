@@ -73,32 +73,32 @@ ctCut05_filtSamples <- grep("CT_Cut_._.", colnames(data_filtSamples$counts)) # c
 
 ################################################################################
 data <- data_filtSamples
-data$abundance <- data$abundance[idx,ctCut05_filtSamples]
-data$counts <- data$counts[idx,ctCut05_filtSamples]
-data$length <- data$length[idx,ctCut05_filtSamples]
+data$abundance <- data$abundance[idx,ctCutUncut0_filtSamples]
+data$counts <- data$counts[idx,ctCutUncut0_filtSamples]
+data$length <- data$length[idx,ctCutUncut0_filtSamples]
 
-coldata_samples <- coldata[coldata$names %in% colnames(data$counts), c("names","Trat_03")]
+coldata_samples <- coldata[coldata$names %in% colnames(data$counts), c("names","Trat_02")]
 ################################################################################
 ddsTxi <- DESeqDataSetFromTximport(txi = data,
                                    colData = coldata_samples,
-                                   design = ~ Trat_03)
+                                   design = ~ Trat_02)
 
 # -- pre-filtragem
 keep <- rowSums(counts(ddsTxi)) >= 10
 dds <- ddsTxi[keep,]
 
 # -- setting the reference
-dds$Trat_03 <- relevel(dds$Trat_03, ref = "5")
+dds$Trat_02 <- relevel(dds$Trat_02, ref = "uncut")
 
 # -- differential expression
 dds <- DESeq(dds)
-res <- results(dds, contrast = c("Trat_03","5","0"))
-res_padj05_lfc0 <- results(dds, contrast = c("Trat_03","5","0"), alpha = 0.05)
+res <- results(dds, contrast = c("Trat_02","cut","uncut"))
+res_padj05_lfc0 <- results(dds, contrast = c("Trat_02","cut","uncut"), alpha = 0.05)
 
 summary(res)
 summary(res_padj05_lfc0)
 
 ################################################################################
-write.csv(res_padj05_lfc0, file = "filtSamples/CTcut5_CTcut0_res05_sig_fc0.csv")
+write.csv(res_padj05_lfc0, file = "filtSamples/CTcut0_CTuncut0_res05_sig_fc0.csv")
 ################################################################################
 
