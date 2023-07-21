@@ -29,6 +29,9 @@ data$diffexpressed <- "NO"
 data$diffexpressed[data$log2FoldChange < (-0.5)] <- "DOWN"
 data$diffexpressed[data$log2FoldChange > (0.5)] <- "UP"
 
+#length(data$diffexpressed == "UP")
+#length(data$diffexpressed == "DOWN")
+
 data$delabel <- NA
 data$delabel[data$diffexpressed != "NO"] <- data$symbol[data$diffexpressed != "NO"]
 
