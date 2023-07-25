@@ -6,126 +6,142 @@
 ## jean resende
 ################################################################################
 library(clusterProfiler)
-library(org.Dr.eg.db)
+library(ggplot2)
 
 # -- Down -- ###################################################################
 ## -- GO
-data.genes <- read.csv("../differential_expression/allSamples/AHuncut0_CTuncut0_res05_sig_fc0.csv")
 
-data <- data.genes[data.genes$log2FoldChange < -0.5,]
-data <- data[!is.na(data$padj),]
-data <- data[data$padj < 0.05,]
-nrow(data)
+## -- functions
+downEnrichGO <- function(data.genes){
+  require(clusterProfiler)
+  require(org.Dr.eg.db)
+  data <- data.genes[data.genes$log2FoldChange < -0.5,]
+  data <- data[!is.na(data$padj),]
+  data <- data[data$padj < 0.05,]
+  nrow(data)
+  
+  gene <- data$X
+  
+  entrez_genes <- mapIds(org.Dr.eg.db, gene, 'ENTREZID', 'ENSEMBL')
+  entrez_genes <- entrez_genes[!is.na(entrez_genes)]
+  
+  ego <- enrichGO(gene         = entrez_genes,
+                  OrgDb         = org.Dr.eg.db,
+                  ont           = "ALL",
+                  pAdjustMethod = "BH")
+  return(ego)
+}
 
-gene <- data$X
+upEnrichGO <- function(data.genes){
+  require(clusterProfiler)
+  require(org.Dr.eg.db)
+  data <- data.genes[data.genes$log2FoldChange > 0.5,]
+  data <- data[!is.na(data$padj),]
+  data <- data[data$padj < 0.05,]
+  nrow(data)
+  
+  gene <- data$X
+  
+  entrez_genes <- mapIds(org.Dr.eg.db, gene, 'ENTREZID', 'ENSEMBL')
+  entrez_genes <- entrez_genes[!is.na(entrez_genes)]
+  
+  ego <- enrichGO(gene         = entrez_genes,
+                  OrgDb         = org.Dr.eg.db,
+                  ont           = "ALL",
+                  pAdjustMethod = "BH")
+  return(ego)
+}
 
-entrez_genes <- mapIds(org.Dr.eg.db, gene, 'ENTREZID', 'ENSEMBL')
-entrez_genes <- entrez_genes[!is.na(entrez_genes)]
+downKegg <- function(data.genes){
+  require(clusterProfiler)
+  require(org.Dr.eg.db)
+  data <- data.genes[data.genes$log2FoldChange < -0.5,]
+  data <- data[!is.na(data$padj),]
+  data <- data[data$padj < 0.05,]
+  nrow(data)
+  
+  gene <- data$X
+  
+  entrez_genes <- mapIds(org.Dr.eg.db, gene, 'ENTREZID', 'ENSEMBL')
+  entrez_genes <- entrez_genes[!is.na(entrez_genes)]
+  
+  kegg <- enrichKEGG(gene = entrez_genes,
+                     organism = "dre",
+                     pvalueCutoff = 0.05)
+  return(kegg)
+}
 
-### -- BP
-ego <- enrichGO(gene         = entrez_genes,
-                OrgDb         = org.Dr.eg.db,
-                ont           = "ALL",
-                pAdjustMethod = "BH")
-table(ego@result$ONTOLOGY)
-data_egoo <- ego@result
+upKegg <- function(data.genes){
+  require(clusterProfiler)
+  require(org.Dr.eg.db)
+  data <- data.genes[data.genes$log2FoldChange > 0.5,]
+  data <- data[!is.na(data$padj),]
+  data <- data[data$padj < 0.05,]
+  nrow(data)
+  
+  gene <- data$X
+  
+  entrez_genes <- mapIds(org.Dr.eg.db, gene, 'ENTREZID', 'ENSEMBL')
+  entrez_genes <- entrez_genes[!is.na(entrez_genes)]
+  
+  kegg <- enrichKEGG(gene = entrez_genes,
+                     organism = "dre",
+                     pvalueCutoff = 0.05)
+  return(kegg)
+}
 
+################################################################################
+# -- down
+fileNames <- list.files("../differential_expression/allSamples/")
 
-head(ego)
-barplot(ego)
-goplot(ego)
+for (i in 1:length(fileNames)) {
+  data.genes <- read.csv(paste("../differential_expression/allSamples",
+                               fileNames[i], sep = "/"))
+  
+  ego <- downEnrichGO(data.genes) # down
+  
+  graph <- dotplot(ego, split="ONTOLOGY", font.size=8, showCategory=5)+
+    facet_grid(~ONTOLOGY)+
+    labs(title = "GO Analysis",
+         subtitle = "Top 10 terms for BP, CC and MF")
+  
+  ggsave(paste("allSamples/down_GO_analysis_",gsub(".csv","",fileNames[i]), ".pdf",
+               sep = ""), graph, width = 7, height = 5)
+  
+  write.csv(ego@result, file=paste("allSamples/down_GO_analysis_",fileNames[i],
+                                   sep = ""))
+  
+  kegg <- downKegg(data.genes) # down
 
-### -- MF
-ego <- enrichGO(gene         = entrez_genes,
-                OrgDb         = org.Dr.eg.db,
-                ont           = "MF",
-                pAdjustMethod = "BH")
+  graph <- dotplot(kegg, showCategory=nrow(kegg), font.size=8)
+  ggsave(paste("allSamples/down_KEGG_analysis_",gsub(".csv","",fileNames[i]),
+               ".pdf",sep = ""), graph, width = 6, height = 6)
+}
 
-head(ego)
-barplot(ego)
-goplot(ego)
+# -- up
+fileNames <- list.files("../differential_expression/allSamples/")
 
-### -- CC
-ego <- enrichGO(gene         = entrez_genes,
-                OrgDb         = org.Dr.eg.db,
-                ont           = "CC",
-                pAdjustMethod = "BH")
+for (i in 1:length(fileNames)) {
+  data.genes <- read.csv(paste("../differential_expression/allSamples",
+                               fileNames[i], sep = "/"))
+  
+  ego <- upEnrichGO(data.genes) # down
+  
+  graph <- dotplot(ego, split="ONTOLOGY", font.size=8, showCategory=5)+
+    facet_grid(~ONTOLOGY)+
+    labs(title = "GO Analysis",
+         subtitle = "Top 10 terms for BP, CC and MF")
+  
+  ggsave(paste("allSamples/up_GO_analysis_",gsub(".csv","",fileNames[i]), ".pdf",
+               sep = ""), graph, width = 7, height = 5)
+  
+  write.csv(ego@result, file=paste("allSamples/up_GO_analysis_",fileNames[i],
+                                   sep = ""))
+  
+  kegg <- upKegg(data.genes) # down
+  
+  graph <- dotplot(kegg, showCategory=nrow(kegg), font.size=8)
+  ggsave(paste("allSamples/up_KEGG_analysis_",gsub(".csv","",fileNames[i]),
+               ".pdf",sep = ""), graph, width = 6, height = 6)
+}
 
-head(ego)
-barplot(ego)
-goplot(ego)
-
-## -- KEGG
-kegg <- enrichKEGG(gene = entrez_genes,
-                   organism = "dre",
-                   pvalueCutoff = 0.05)
-
-head(kegg)
-head(kegg@result)
-browseKEGG(kegg, "dre00100")
-dotplot(kegg)
-dotplot(ego,   showCategory = 20)
-?dotplot
-
-# -- Up -- #####################################################################
-data.genes <- read.csv("../differential_expression/allSamples/AHuncut0_CTuncut0_res05_sig_fc0.csv")
-
-data <- data.genes[data.genes$log2FoldChange > 0.5,]
-data <- data[!is.na(data$padj),]
-data <- data[data$padj < 0.05,]
-nrow(data)
-
-gene <- data$X
-
-entrez_genes <- mapIds(org.Dr.eg.db, gene, 'ENTREZID', 'ENSEMBL')
-entrez_genes <- entrez_genes[!is.na(entrez_genes)]
-
-## -- BP
-ego <- enrichGO(gene         = entrez_genes,
-                OrgDb         = org.Dr.eg.db,
-                ont           = "BP",
-                pAdjustMethod = "BH")
-
-head(ego)
-barplot(ego)
-goplot(ego)
-
-## -- MF
-ego <- enrichGO(gene         = entrez_genes,
-                OrgDb         = org.Dr.eg.db,
-                ont           = "MF",
-                pAdjustMethod = "BH")
-
-head(ego)
-barplot(ego)
-goplot(ego)
-
-## -- CC
-ego <- enrichGO(gene         = entrez_genes,
-                OrgDb         = org.Dr.eg.db,
-                ont           = "CC",
-                pAdjustMethod = "BH")
-
-head(ego)
-barplot(ego)
-goplot(ego)
-
-#ggo <- groupGO(gene     = gene.ahctuncut,
-#               OrgDb    = org.Dr.eg.db,
-#               keyType = "ENSEMBL",
-#               ont      = "CC",
-#               #level    = 3,
-#               readable = TRUE)
-#head(ggo)
-
-# -- KEEG
-entrez_genes <- mapIds(org.Dr.eg.db, gene.ahctuncut, 'ENTREZID', 'ENSEMBL')
-
-kegg <- enrichKEGG(gene = entrez_genes,
-                   organism = "dre",
-                   pvalueCutoff = 0.05)
-
-head(kegg)
-
-
-browseKEGG(kegg, "dre00100")
