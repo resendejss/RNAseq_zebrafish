@@ -2,7 +2,7 @@
 ## RNA-Seq - zebrafish
 ## GO enrichment
 ## date of creation: 2023/06/12
-## date of last update: 2023/06/16
+## date of last update: 2023/07/26
 ## jean resende
 ################################################################################
 library(clusterProfiler)
@@ -89,59 +89,82 @@ upKegg <- function(data.genes){
                      pvalueCutoff = 0.05)
   return(kegg)
 }
-
 ################################################################################
-# -- down
+## All Saamples                                                               ##
+################################################################################
+# -- down -- ###################################################################
 fileNames <- list.files("../differential_expression/allSamples/")
 
-for (i in 1:length(fileNames)) {
-  data.genes <- read.csv(paste("../differential_expression/allSamples",
-                               fileNames[i], sep = "/"))
-  
-  ego <- downEnrichGO(data.genes) # down
-  
-  graph <- dotplot(ego, split="ONTOLOGY", font.size=8, showCategory=5)+
-    facet_grid(~ONTOLOGY)+
-    labs(title = "GO Analysis",
-         subtitle = "Top 10 terms for BP, CC and MF")
-  
-  ggsave(paste("allSamples/down_GO_analysis_",gsub(".csv","",fileNames[i]), ".pdf",
-               sep = ""), graph, width = 7, height = 5)
-  
-  write.csv(ego@result, file=paste("allSamples/down_GO_analysis_",fileNames[i],
-                                   sep = ""))
-  
-  kegg <- downKegg(data.genes) # down
+# vou precisar fazer destaa forma pois com o for normal estava dando erro nos
+# ultimos dois arquivos
 
-  graph <- dotplot(kegg, showCategory=nrow(kegg), font.size=8)
-  ggsave(paste("allSamples/down_KEGG_analysis_",gsub(".csv","",fileNames[i]),
-               ".pdf",sep = ""), graph, width = 6, height = 6)
-}
+#i = fileNames[1]
+#i = fileNames[2]
+#i = fileNames[3]
+#i = fileNames[4]
+#i = fileNames[5]
+#i = fileNames[6]
+#i = fileNames[7]
 
-# -- up
+data.genes <- read.csv(paste("../differential_expression/allSamples",
+                             i, sep = "/"))
+ego <- downEnrichGO(data.genes) # down
+  
+graph <- dotplot(ego, split="ONTOLOGY", font.size=8, showCategory=5)+
+  facet_grid(~ONTOLOGY)+
+  labs(title = "GO Analysis",
+       subtitle = "Top 10 terms for BP, CC and MF")
+  
+ggsave(paste("allSamples/down_GO_analysis_",gsub(".csv","",i), ".pdf",
+             sep = ""), graph, width = 7, height = 5)
+  
+write.csv(ego@result, file=paste("allSamples/down_GO_analysis_",i,sep = ""))
+  
+kegg <- downKegg(data.genes) # down
+
+graph <- dotplot(kegg, showCategory=nrow(kegg), font.size=8)
+ggsave(paste("allSamples/down_KEGG_analysis_",gsub(".csv","",i),
+             ".pdf",sep = ""), graph, width = 6, height = 6)
+
+write.csv(kegg@result, file=paste("allSamples/down_KEGG_analysis_",i,sep = ""))
+
+rm(ego,graph,kegg,fileNames,i,data.genes)
+
+# -- up -- #####################################################################
 fileNames <- list.files("../differential_expression/allSamples/")
 
-for (i in 1:length(fileNames)) {
-  data.genes <- read.csv(paste("../differential_expression/allSamples",
-                               fileNames[i], sep = "/"))
-  
-  ego <- upEnrichGO(data.genes) # down
-  
-  graph <- dotplot(ego, split="ONTOLOGY", font.size=8, showCategory=5)+
-    facet_grid(~ONTOLOGY)+
-    labs(title = "GO Analysis",
-         subtitle = "Top 10 terms for BP, CC and MF")
-  
-  ggsave(paste("allSamples/up_GO_analysis_",gsub(".csv","",fileNames[i]), ".pdf",
-               sep = ""), graph, width = 7, height = 5)
-  
-  write.csv(ego@result, file=paste("allSamples/up_GO_analysis_",fileNames[i],
-                                   sep = ""))
-  
-  kegg <- upKegg(data.genes) # down
-  
-  graph <- dotplot(kegg, showCategory=nrow(kegg), font.size=8)
-  ggsave(paste("allSamples/up_KEGG_analysis_",gsub(".csv","",fileNames[i]),
-               ".pdf",sep = ""), graph, width = 6, height = 6)
-}
+# vou precisar fazer destaa forma pois com o for normal estava dando erro nos
+# ultimos dois arquivos
 
+i = fileNames[1]
+#i = fileNames[2]
+#i = fileNames[3]
+#i = fileNames[4]
+#i = fileNames[5]
+#i = fileNames[6]
+#i = fileNames[7]
+
+data.genes <- read.csv(paste("../differential_expression/allSamples",
+                             i, sep = "/"))
+ego <- upEnrichGO(data.genes) # up
+
+graph <- dotplot(ego, split="ONTOLOGY", font.size=8, showCategory=5)+
+  facet_grid(~ONTOLOGY)+
+  labs(title = "GO Analysis",
+       subtitle = "Top 10 terms for BP, CC and MF")
+
+ggsave(paste("allSamples/up_GO_analysis_",gsub(".csv","",i), ".pdf",
+             sep = ""), graph, width = 7, height = 5)
+
+write.csv(ego@result, file=paste("allSamples/up_GO_analysis_",i,sep = ""))
+
+kegg <- upKegg(data.genes) # up
+
+graph <- dotplot(kegg, showCategory=nrow(kegg), font.size=8)
+ggsave(paste("allSamples/up_KEGG_analysis_",gsub(".csv","",i),
+             ".pdf",sep = ""), graph, width = 6, height = 6)
+
+write.csv(kegg@result, file=paste("allSamples/up_KEGG_analysis_",i,sep = ""))
+
+rm(ego,graph,kegg,fileNames,i,data.genes)
+################################################################################
