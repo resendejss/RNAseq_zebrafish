@@ -2,7 +2,7 @@
 ## RNA-Seq - zebrafish
 ## GO enrichment
 ## date of creation: 2023/06/12
-## date of last update: 2023/07/26
+## date of last update: 2023/07/27
 ## jean resende
 ################################################################################
 library(clusterProfiler)
@@ -136,7 +136,7 @@ fileNames <- list.files("../differential_expression/allSamples/")
 # vou precisar fazer destaa forma pois com o for normal estava dando erro nos
 # ultimos dois arquivos
 
-i = fileNames[1]
+#i = fileNames[1]
 #i = fileNames[2]
 #i = fileNames[3]
 #i = fileNames[4]
