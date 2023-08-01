@@ -145,7 +145,7 @@ fileNames <- list.files("../differential_expression/allSamples/")
 #i = fileNames[7]
 
 data.genes <- read.csv(paste("../differential_expression/allSamples",
-                             i, sep = "/"))
+                             i, sep = "/"))allSamples
 ego <- upEnrichGO(data.genes) # up
 
 graph <- dotplot(ego, split="ONTOLOGY", font.size=8, showCategory=5)+
