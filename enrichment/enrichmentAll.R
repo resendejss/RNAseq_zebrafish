@@ -2,7 +2,7 @@
 ## RNA-Seq - zebrafish
 ## GO enrichment
 ## date of creation: 2023/06/12
-## date of last update: 2023/07/27
+## date of last update: 2023/08/01
 ## jean resende
 ################################################################################
 library(clusterProfiler)
@@ -93,12 +93,12 @@ upKegg <- function(data.genes){
 ## All Saamples                                                               ##
 ################################################################################
 # -- down -- ###################################################################
-fileNames <- list.files("../differential_expression/allSamples/")
+fileNames <- list.files("../differential_expression/allSamples/")[1:7]
 
 # vou precisar fazer destaa forma pois com o for normal estava dando erro nos
 # ultimos dois arquivos
 
-#i = fileNames[1]
+i = fileNames[1]
 #i = fileNames[2]
 #i = fileNames[3]
 #i = fileNames[4]
