@@ -105,3 +105,39 @@ colnames(data)[1] <- "ensemblid"
 write.csv(data, file="listDEGs/LIST_differentialExpression_filtSamples_fiveComp.csv")
 rm(list = ls())
 ################################################################################
+
+list_allSamples_all <- read.csv("listDEGs/LIST_differentialExpression_allSamples.csv")
+list_allSamples_fivComp <- read.csv("listDEGs/LIST_differentialExpression_allSamples_fiveComp.csv")
+
+list_allSamples_fivComp <- list_allSamples_fivComp[,-c(1,3)]
+
+
+list_all_allSamples <- merge(list_allSamples_all,list_allSamples_fivComp,
+                             by="ensemblid", all = T)
+list_all_allSamples <- list_all_allSamples[,-2]
+
+head(list_all_allSamples$ensemblid)
+head(list_allSamples_all$ensemblid)
+
+write.csv(list_all_allSamples, file = "listDEGs/LIST_all_allSamples.csv")
+
+rm(list = ls())
+
+################################################################################
+
+list_filtSamples_all <- read.csv("listDEGs/LIST_differentialExpression_filtSamples.csv")
+list_filtSamples_fivComp <- read.csv("listDEGs/LIST_differentialExpression_filtSamples_fiveComp.csv")
+
+list_filtSamples_fivComp <- list_filtSamples_fivComp[,-c(1,3)]
+
+
+list_all_filtSamples <- merge(list_filtSamples_all,list_filtSamples_fivComp,
+                             by="ensemblid", all = T)
+list_all_filtSamples <- list_all_filtSamples[,-2]
+
+head(list_all_filtSamples$ensemblid)
+head(list_filtSamples_all$ensemblid)
+
+write.csv(list_all_filtSamples, file = "listDEGs/LIST_all_filtSamples.csv")
+
+rm(list = ls())
