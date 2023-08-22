@@ -1,0 +1,7 @@
+"","ID","Description","GeneRatio","BgRatio","pvalue","p.adjust","qvalue","geneID","Count"
+"dre00920","dre00920","Sulfur metabolism - Danio rerio (zebrafish)","1/2","10/7371",0.00271167932859473,0.0162590311844039,0.00570492322259785,"777719",1
+"dre00450","dre00450","Selenocompound metabolism - Danio rerio (zebrafish)","1/2","20/7371",0.00541967706146795,0.0162590311844039,0.00570492322259785,"777719",1
+"dre04260","dre04260","Cardiac muscle contraction - Danio rerio (zebrafish)","1/2","145/7371",0.0389590140833921,0.0668057757609996,0.0234406230740349,"570210",1
+"dre00230","dre00230","Purine metabolism - Danio rerio (zebrafish)","1/2","166/7371",0.0445371838406664,0.0668057757609996,0.0234406230740349,"777719",1
+"dre04261","dre04261","Adrenergic signaling in cardiomyocytes - Danio rerio (zebrafish)","1/2","249/7371",0.0664253380671292,0.0677358020641601,0.0237669480926877,"570210",1
+"dre04814","dre04814","Motor proteins - Danio rerio (zebrafish)","1/2","254/7371",0.0677358020641601,0.0677358020641601,0.0237669480926877,"570210",1

@@ -1,0 +1,15 @@
+"","ID","Description","GeneRatio","BgRatio","pvalue","p.adjust","qvalue","geneID","Count"
+"dre00450","dre00450","Selenocompound metabolism - Danio rerio (zebrafish)","1/8","20/7371",0.0215117815713147,0.165483640149755,0.149308547503539,"103911967",1
+"dre00900","dre00900","Terpenoid backbone biosynthesis - Danio rerio (zebrafish)","1/8","22/7371",0.0236405200213936,0.165483640149755,0.149308547503539,"334380",1
+"dre00514","dre00514","Other types of O-glycan biosynthesis - Danio rerio (zebrafish)","1/8","60/7371",0.063323912356692,0.207389889711719,0.187118697484257,"641495",1
+"dre00970","dre00970","Aminoacyl-tRNA biosynthesis - Danio rerio (zebrafish)","1/8","67/7371",0.0704779786525451,0.207389889711719,0.187118697484257,"103911967",1
+"dre00564","dre00564","Glycerophospholipid metabolism - Danio rerio (zebrafish)","1/8","112/7371",0.115337516667929,0.207389889711719,0.187118697484257,"558499",1
+"dre04914","dre04914","Progesterone-mediated oocyte maturation - Danio rerio (zebrafish)","1/8","112/7371",0.115337516667929,0.207389889711719,0.187118697484257,"550576",1
+"dre03040","dre03040","Spliceosome - Danio rerio (zebrafish)","1/8","143/7371",0.145127788023987,0.207389889711719,0.187118697484257,"445383",1
+"dre04260","dre04260","Cardiac muscle contraction - Danio rerio (zebrafish)","1/8","145/7371",0.147019228426054,0.207389889711719,0.187118697484257,"570210",1
+"dre00190","dre00190","Oxidative phosphorylation - Danio rerio (zebrafish)","1/8","148/7371",0.149849523193887,0.207389889711719,0.187118697484257,"402883",1
+"dre04114","dre04114","Oocyte meiosis - Danio rerio (zebrafish)","1/8","151/7371",0.152671597194206,0.207389889711719,0.187118697484257,"550576",1
+"dre04120","dre04120","Ubiquitin mediated proteolysis - Danio rerio (zebrafish)","1/8","162/7371",0.162949199059207,0.207389889711719,0.187118697484257,"550576",1
+"dre04110","dre04110","Cell cycle - Danio rerio (zebrafish)","1/8","191/7371",0.189523646693168,0.221110921142029,0.199498575466492,"550576",1
+"dre04261","dre04261","Adrenergic signaling in cardiomyocytes - Danio rerio (zebrafish)","1/8","249/7371",0.240466826637491,0.244724289018299,0.220803869790946,"570210",1
+"dre04814","dre04814","Motor proteins - Danio rerio (zebrafish)","1/8","254/7371",0.244724289018299,0.244724289018299,0.220803869790946,"570210",1
